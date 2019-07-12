@@ -1,0 +1,25 @@
+{
+    "jsonrpc": "2.0",
+    "method": "call",
+    "params": ["database_api", "set_block_applied_callback", [1234]],
+    "id": 1
+}
+
+{
+    "jsonrpc": "2.0",
+    "method": "call",
+    "params": ["database_api", "set_block_applied_callback", [1234]],
+    "id": 1
+}
+
+{
+    "method": "notice",
+    "params": [1234, [{
+        "previous": "00312cb812578a1be485a236958c0e1a7cd40d0b",
+        "timestamp": "2019-07-12T09:25:33",
+        "bobserver": "tymaker",
+        "transaction_merkle_root": "0000000000000000000000000000000000000000",
+        "extensions": [],
+        "bobserver_signature": "1f765287ad2fd66593686e9c222d7de07dfdda5bb51a496e61810527c0d4596140557f0b5b0b7e8edf03cb90f9be39e3d6a5518403f559c54d516cb22ef6c18fb3"
+    }]]
+}
