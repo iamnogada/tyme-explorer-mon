@@ -42,7 +42,7 @@ app.createWSS=(server)=>{
 
 
 Blockinfo.on(BlockMonitor.RECEIVE_BLOCK,(block)=>{
-    console.log(`RXBlockinfo::${block}`)
+    console.log(`RXBlockinfo::${block.blockno}`)
 })
 BlockMonitor.on(BlockMonitor.RECEIVE_BLOCK,(blockno)=>{
     console.log(`RX:${blockno}`)

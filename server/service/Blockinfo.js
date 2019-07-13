@@ -33,7 +33,7 @@ function _onmessage(data) {
         console.log("Blockinfo:Start receive blockinfo");
         return;
     }
-    
+    data.result.blockno=this.blockno;
     this.emit(this.RECEIVE_BLOCK, data.result)
 }
 function _onclose() {
