@@ -7,8 +7,15 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "UnitTest",
+            "program": "${workspaceFolder}/server/test.js"
+        },
+        
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Server",
             "program": "${workspaceFolder}/server/bin/www"
-        }
+        },
     ]
 }

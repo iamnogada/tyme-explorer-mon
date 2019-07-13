@@ -1,11 +1,11 @@
 'use strict'
 const WebSocketClient = require('ws');
+var _ws;
 var _url=""
 var _config={}
 var _name=""
 class JsonRPC {
     constructor() {
-        this._ws={}
         this.callbackOpen = this.callbackOpen.bind(this);
         this.callbackMessage = this.callbackMessage.bind(this);
         this.callbackRXString = this.callbackRXString.bind(this);
@@ -25,20 +25,20 @@ class JsonRPC {
         _url = url ? url : _url;
         _config = config ? config : _config;
 
-        this._ws = new WebSocketClient(_url, _config);
-        this._ws.on('open', ()=>{
+        _ws = _ws? _ws:new WebSocketClient(_url, _config);
+        _ws.on('open', ()=>{
             console.log(`connected to ${_url}`)
             this.callbackOpen()
         });
-        this._ws.on('message', (data)=>{
+        _ws.on('message', (data)=>{
             
             this.callbackRXString(data)
         });
-        this._ws.on('error', (error)=>{
+        _ws.on('error', (error)=>{
 
             this.callbackError(error)
         });
-        this._ws.on('close', ()=>{
+        _ws.on('close', ()=>{
             console.log('closed')
             this.callbackClose();
         });
@@ -54,15 +54,14 @@ class JsonRPC {
     callbackClose() {}
 
     send(str) {
-        if (WebSocketClient.OPEN != this._ws.readyState) throw "need to open first";
-        this._ws.send(str);
+        if (WebSocketClient.OPEN != _ws.readyState) throw "need to open first";
+        _ws.send(str);
     }
     sendJson(json) {
         this.send(JSON.stringify(json));
     }
     close() {
-        if(!this._ws instanceof WebSocketClient) return;
-        this._ws.close();
+        _ws.close();
     }
 }
 
