@@ -9,7 +9,7 @@ var _config = {}
 
 var ws //websocket client
 
-class BlockMonitor extends EventEmitter {
+class WSBlockMonitor extends EventEmitter {
     constructor() {
         super()
     }
@@ -18,7 +18,7 @@ class BlockMonitor extends EventEmitter {
         _config = config ? config : _config;
         ws = new WebSocketClient(_url, _config);
         ws.once('open', () => {
-            console.log(`connected to ${_url} for blockinfo:${ws.readyState}`)
+            console.log(`Monitor connected to ${_url} for blockinfo`)
             ws.send(util.ParamRPCCallback);
         });
         ws.on('message', (data) => {
@@ -28,7 +28,7 @@ class BlockMonitor extends EventEmitter {
             _onerror(error)
         });
         ws.on('close', () => {
-            console.log('closed')
+            console.log('BlockMonitor: closed')
             _onclose()
         });
     }
@@ -40,13 +40,13 @@ class BlockMonitor extends EventEmitter {
         }
         
     }
-    static get EVENT_ON_BLOCK() {
+    get EVENT_ON_BLOCK() {
         return 'event:block';
     }
 }
 
 function _onmessage(data) {
-    console.log(`rx:${data}`)
+    // console.log(`rx:${data}`)
     let jsonData = JSON.parse(data)
     if (null === jsonData.result) {
         console.log("Start receive blockinfo");
@@ -55,16 +55,16 @@ function _onmessage(data) {
     let no,head;
     try {
         head = jsonData.params[1][0].previous;
-        no = parseInt(head.substring(0, 8), 16) + 1;
+        no = util.parseBlockNoFromId(head)+1
     }catch(e){
         console.error("parse data in blockinfo");
         return;
     }
-    self.emit(this.EVENT_ON_BLOCK, no)
+    self.emit(self.EVENT_ON_BLOCK, no)
 }
 function _onclose() {
     self.start({});
 }
 function _onerror(error) { }
-self =new BlockMonitor()
+self =new WSBlockMonitor()
 module.exports = self
