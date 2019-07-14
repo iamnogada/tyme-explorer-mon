@@ -15,3 +15,13 @@ myAsync().then((aaa)=>{
     console.log(aaa);
 })
 console.log('done')
+
+let cats = ['bob','navi']
+let ret = cats.push('say')
+let data=[]
+console.log(cats)
+console.log(ret)
+ret =cats.shift() 
+console.log(ret)
+console.log(cats)
+console.log(data.shift())

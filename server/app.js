@@ -40,14 +40,12 @@ app.createWSS=(server)=>{
     });
 }
 
-
-Blockinfo.on(BlockMonitor.RECEIVE_BLOCK,(block)=>{
+Blockinfo.init({})
+Blockinfo.on(Blockinfo.EVENT_ON_BLOCK,(block)=>{
     console.log(`RXBlockinfo::${block.blockno}`)
 })
-BlockMonitor.on(BlockMonitor.RECEIVE_BLOCK,(blockno)=>{
-    console.log(`RX:${blockno}`)
-    Blockinfo.getBlock(blockno);
-})
-BlockMonitor.start();
+
+BlockMonitor.addListener(BlockMonitor.EVENT_ON_BLOCK,Blockinfo.requestBlock)
+BlockMonitor.start({});
 
 module.exports = app;

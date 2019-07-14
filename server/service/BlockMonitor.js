@@ -1,48 +1,70 @@
 const EventEmitter = require('events')
+const WebSocketClient = require('ws')
+const util = require('../lib/util')
+const config = require('../config/config')
 
-const JsonRPC = require('../lib/jsonrpc');
-const util = require('../lib/util');
-const config = require('../config/config');
+var self
+var _url = config.apiEndpoint
+var _config = {}
 
-const _rpc = new JsonRPC();
+var ws //websocket client
 
 class BlockMonitor extends EventEmitter {
     constructor() {
         super()
-        _rpc.callbackMessage = _onmessage.bind(this)
-        _rpc.callbackClose = _onclose.bind(this)
-        // _rpc.callbackError = _onerror.bind(this)
     }
-    start() {
-        _rpc.init({ url: config.apiEndpoint });
+    start({ url, config }) {
+        _url = url ? url : _url;
+        _config = config ? config : _config;
+        ws = new WebSocketClient(_url, _config);
+        ws.once('open', () => {
+            console.log(`connected to ${_url} for blockinfo:${ws.readyState}`)
+            ws.send(util.ParamRPCCallback);
+        });
+        ws.on('message', (data) => {
+            _onmessage(data)
+        });
+        ws.on('error', (error) => {
+            _onerror(error)
+        });
+        ws.on('close', () => {
+            console.log('closed')
+            _onclose()
+        });
     }
+    requestBlock(blockno) {
+        if (undefined == ws
+            || WebSocketClient.OPEN !== ws.readyState) {
+            msg.push(blockno)
+            return
+        }
+        
+    }
+    static get EVENT_ON_BLOCK() {
+        return 'event:block';
+    }
+}
 
-    get RECEIVE_BLOCK() {
-        return 'receive-block';
-    }
-}
-_rpc.callbackOpen = () => {
-    _rpc.send(util.ParamRPCCallback);
-}
 function _onmessage(data) {
-    // Get next blockno
-    if (null === data.result) {
+    console.log(`rx:${data}`)
+    let jsonData = JSON.parse(data)
+    if (null === jsonData.result) {
         console.log("Start receive blockinfo");
         return;
     }
     let no,head;
     try {
-        head = data.params[1][0].previous;
+        head = jsonData.params[1][0].previous;
         no = parseInt(head.substring(0, 8), 16) + 1;
     }catch(e){
         console.error("parse data in blockinfo");
         return;
     }
-    this.emit(this.RECEIVE_BLOCK, no)
+    self.emit(this.EVENT_ON_BLOCK, no)
 }
 function _onclose() {
-    // this.start();
+    self.start({});
 }
 function _onerror(error) { }
-
-module.exports = new BlockMonitor();
+self =new BlockMonitor()
+module.exports = self

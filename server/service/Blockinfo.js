@@ -1,43 +1,70 @@
 const EventEmitter = require('events')
+const WebSocketClient = require('ws')
+const util = require('../lib/util')
+const config = require('../config/config')
 
-const JsonRPC = require('../lib/jsonrpc');
-const util = require('../lib/util');
-const config = require('../config/config');
+var self
+var _url = config.apiEndpoint
+var _config = {}
 
-const _rpc =new JsonRPC();
+var msg = []
+var ws
 
 class Blockinfo extends EventEmitter {
-    constructor(){
+    constructor() {
         super()
-        this.blockno=0;
-        _rpc.callbackMessage = _onmessage.bind(this)
-        _rpc.callbackClose = _onclose.bind(this)
-        _rpc.callbackOpen =_onopen.bind(this)
-        // _rpc.callbackError = _onerror.bind(this)
-        _rpc.init({ url: config.apiEndpoint });
     }
-    getBlock(blockno){
-        this.blockno=blockno
-        _rpc.send(util.ParamGetBlock(this.blockno))        
+    init({ url, config }) {
+        _url = url ? url : _url;
+        _config = config ? config : _config;
+        ws = new WebSocketClient(_url, _config);
+        ws.once('open', () => {
+            console.log(`connected to ${_url} for blockinfo:${ws.readyState}`)
+            if (0 == msg.length) return
+            let no = msg.shift();
+            this.requestBlock(no);
+        });
+        ws.on('message', (data) => {
+            _onmessage(data)
+            if (0 == msg.length) return
+            let no = msg.shift();
+            this.requestBlock(no);
+        });
+        ws.on('error', (error) => {
+            _onerror(error)
+        });
+        ws.on('close', () => {
+            console.log('closed')
+            _onclose()
+        });
     }
-    get RECEIVE_BLOCK() {
-        return 'receive-block';
-    }    
+    requestBlock(blockno) {
+        if (undefined == ws
+            || WebSocketClient.OPEN !== ws.readyState) {
+            msg.push(blockno)
+            return
+        }
+        ws.send(util.ParamGetBlock(blockno));
+    }
+    static get EVENT_ON_BLOCK() {
+        return 'event:block';
+    }
 }
-function _onopen() {
-    // _rpc.send(util.ParamGetBlock(1))
-}
+
 function _onmessage(data) {
+    console.log(`rx:${data}`)
+    let jsonData = JSON.parse(data)
     // Get next blockno
-    if (null === data.result) {
+    if (null === jsonData.result) {
         console.log("Blockinfo:Start receive blockinfo");
         return;
     }
-    data.result.blockno=this.blockno;
-    this.emit(this.RECEIVE_BLOCK, data.result)
+    self.emit(Blockinfo.EVENT_ON_BLOCK, jsonData.result)
 }
 function _onclose() {
-    _rpc.init({ url: config.apiEndpoint });
+    self.init();
 }
 function _onerror(error) { }
-module.exports= new Blockinfo();
+
+self = new Blockinfo()
+module.exports = self;
