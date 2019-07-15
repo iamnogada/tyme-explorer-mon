@@ -1,5 +1,5 @@
 const dbconfig = {
-    endpoint: "mongodb://localhost:32768",
+    endpoint: "mongodb://localhost:27017",
     name: "tyme-mainnet",
     options: {
 
