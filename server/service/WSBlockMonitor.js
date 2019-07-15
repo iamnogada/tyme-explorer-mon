@@ -1,11 +1,11 @@
 const EventEmitter = require('events')
 const WebSocketClient = require('ws')
 const util = require('../lib/util')
-const config = require('../config/config')
+const { apiconfig } = require('../config')
 
 var self
-var _url = config.apiEndpoint
-var _config = {}
+var _url = apiconfig.endpoint
+var _config = apiconfig.options
 
 var ws //websocket client
 
@@ -38,7 +38,7 @@ class WSBlockMonitor extends EventEmitter {
             msg.push(blockno)
             return
         }
-        
+
     }
     get EVENT_ON_BLOCK() {
         return 'event:block';
@@ -52,11 +52,11 @@ function _onmessage(data) {
         console.log("Start receive blockinfo");
         return;
     }
-    let no,head;
+    let no, head;
     try {
         head = jsonData.params[1][0].previous;
-        no = util.parseBlockNoFromId(head)+1
-    }catch(e){
+        no = util.parseBlockNoFromId(head) + 1
+    } catch (e) {
         console.error("parse data in blockinfo");
         return;
     }
@@ -66,5 +66,5 @@ function _onclose() {
     self.start({});
 }
 function _onerror(error) { }
-self =new WSBlockMonitor()
+self = new WSBlockMonitor()
 module.exports = self

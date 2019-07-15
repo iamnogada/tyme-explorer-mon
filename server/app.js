@@ -45,14 +45,14 @@ WSBlockinfo.init({})
 
 WSBlockinfo.on(WSBlockinfo.EVENT_ON_BLOCK,(block)=>{
     console.log(`Getblock:${block.block_id}`)
-    Blockinfo.parse(block)
+    Blockinfo.save(block)
 })
 // Blockinfo.requestBlock(3847935)
 WSBlockMonitor.on(WSBlockMonitor.EVENT_ON_BLOCK,(data)=>{
     console.log(`Requesting block no:${data}`)
     WSBlockinfo.requestBlock(data)
 })
-// WSBlockMonitor.start({});
-WSBlockinfo.requestBlock(3820335)
+WSBlockMonitor.start({})
+// WSBlockinfo.requestBlock(3820335)
 
 module.exports = app;

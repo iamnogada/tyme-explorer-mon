@@ -1,12 +1,11 @@
 const EventEmitter = require('events')
 const WebSocketClient = require('ws')
 const util = require('../lib/util')
-const config = require('../config/config')
+const { apiconfig } = require('../config')
 
 var self
-var _url = config.apiEndpoint
-var _config = {}
-
+var _url = apiconfig.endpoint
+var _config = apiconfig.options
 var msg = []
 var ws
 
