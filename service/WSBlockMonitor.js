@@ -2,6 +2,7 @@ const EventEmitter = require('events')
 const WebSocketClient = require('ws')
 const util = require('../lib/util')
 const apiconfig  = require('../config/apiconfig')
+const ServiceStatus = require('./Health')
 
 var self
 var _url = apiconfig.endpoint
@@ -18,6 +19,7 @@ class WSBlockMonitor extends EventEmitter {
         _config = config ? config : _config;
         ws = new WebSocketClient(_url, _config);
         ws.once('open', () => {
+            ServiceStatus.Monitor=true
             console.log(`Monitor connected to ${_url} for blockinfo`)
             ws.send(util.ParamRPCCallback);
         });
@@ -25,9 +27,11 @@ class WSBlockMonitor extends EventEmitter {
             _onmessage(data)
         });
         ws.on('error', (error) => {
+            ServiceStatus.Monitor=false
             _onerror(error)
         });
         ws.on('close', () => {
+            ServiceStatus.Monitor=false
             console.log('BlockMonitor: closed')
             _onclose()
         });

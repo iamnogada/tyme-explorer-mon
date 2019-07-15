@@ -1,21 +1,41 @@
 const mongoose = require('mongoose')
-const dbconfig  = require('../config/dbconfig')
-const server =dbconfig.endpoint
+const dbconfig = require('../config/dbconfig')
+const server = dbconfig.endpoint
 const collection = dbconfig.name
+const ServiceStatus = require('../service/Health')
 
-class Database{
-    constructor(){
+class Database {
+    constructor() {
         this._connect()
+
     }
-    _connect(){
-        mongoose.connect(`${server}/${collection}`)
-        .then(()=>{
-            console.log('mongodb connected')
-        })
-        .catch(error=>{
+    _connect() {
+        mongoose.connection.on('reconnectFailed', (error) => {
+            ServiceStatus.Database = false
             console.error(`Database connection error\n${error}`)
-            process.exit(1)
         })
+        mongoose.connection.on('connected', () => {
+            ServiceStatus.Database = true
+            console.error(`Database connected`)
+        })
+        mongoose.connection.on('disconnected', () => {
+            ServiceStatus.Database = false
+            console.error(`Database disconnected`)
+        })
+        mongoose.connection.on('reconnected', () => {
+            ServiceStatus.Database = true
+            console.error(`Database connected`)
+        })
+        mongoose.connect(`${server}/${collection}`)
+            .then(() => {
+                ServiceStatus.Database = true
+                console.log('mongodb connected')
+            })
+            .catch(error => {
+                ServiceStatus.Database = false
+                console.error(`Database connection error\n${error}`)
+                process.exit(1)
+            })
     }
 }
 const connection = new Database()

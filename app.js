@@ -41,7 +41,7 @@ app.createWSS=(server)=>{
     })
 }
 
-// WSBlockinfo.init({})
+WSBlockinfo.init({})
 
 WSBlockinfo.on(WSBlockinfo.EVENT_ON_BLOCK,(block)=>{
     console.log(`Getblock:${block.block_id}`)
@@ -52,7 +52,7 @@ WSBlockMonitor.on(WSBlockMonitor.EVENT_ON_BLOCK,(data)=>{
     console.log(`Requesting block no:${data}`)
     WSBlockinfo.requestBlock(data)
 })
-// WSBlockMonitor.start({})
+WSBlockMonitor.start({})
 // WSBlockinfo.requestBlock(3820335)
 
 module.exports = app;

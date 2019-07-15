@@ -2,6 +2,7 @@ const EventEmitter = require('events')
 const WebSocketClient = require('ws')
 const util = require('../lib/util')
 const apiconfig  = require('../config/apiconfig')
+const ServiceStatus = require('./Health')
 
 var self
 var _url = apiconfig.endpoint
@@ -18,6 +19,7 @@ class WSBlockinfo extends EventEmitter {
         _config = config ? config : _config;
         ws = new WebSocketClient(_url, _config);
         ws.once('open', () => {
+            ServiceStatus.Blockinfo=true
             console.log(`Blockinfo connected to ${_url} for blockinfo`)
             if (0 == msg.length) return
             let blockno = msg.shift();
@@ -30,9 +32,11 @@ class WSBlockinfo extends EventEmitter {
             this.requestBlock(no);
         });
         ws.on('error', (error) => {
+            ServiceStatus.Blockinfo=false
             _onerror(error)
         });
         ws.on('close', () => {
+            ServiceStatus.Blockinfo=false
             console.log('Blockinfo:closed')
             _onclose()
         });
@@ -51,7 +55,7 @@ class WSBlockinfo extends EventEmitter {
 }
 
 function _onmessage(data) {
-    console.log(`rx:${data}`)
+    // console.log(`rx:${data}`)
     let jsonData = JSON.parse(data)
     // Get next blockno
     if (null === jsonData.result) {
