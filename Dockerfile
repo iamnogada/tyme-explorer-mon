@@ -1,4 +1,4 @@
-From node:10.16.0-alpine
+FROM node:10.16.0-alpine
 
 RUN mkdir /app
 
