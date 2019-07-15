@@ -1,7 +1,7 @@
 const EventEmitter = require('events')
 const WebSocketClient = require('ws')
 const util = require('../lib/util')
-const { apiconfig } = require('../config')
+const apiconfig  = require('../config/apiconfig')
 
 var self
 var _url = apiconfig.endpoint

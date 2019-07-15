@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const { dbconfig } = require('../config')
+const dbconfig  = require('../config/dbconfig')
 const server =dbconfig.endpoint
 const collection = dbconfig.name
 

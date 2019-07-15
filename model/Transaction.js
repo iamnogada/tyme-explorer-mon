@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const { apiconfig } = require('../config')
 
 const transactionSchema = new mongoose.Schema({
     ref_block_num: Number,

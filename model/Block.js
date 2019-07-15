@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const { apiconfig } = require('../config')
 
 const blockSchema = new mongoose.Schema({
     _id: Number,

@@ -1,5 +1,4 @@
 const util = require('../lib/util')
-const mongoose = require('mongoose')
 const { Block, Transaction } = require('../model')
 
 
