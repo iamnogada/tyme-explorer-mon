@@ -8,7 +8,6 @@ var ca
 
 if(dbconfig.options.ssl){
     ca = [fs.readFileSync("../config/key.pem")];
-    
     dbconfig.options.sslCA=ca
 }
 class Database {
