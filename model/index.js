@@ -8,6 +8,8 @@ var ca
 console.log(JSON.stringify(dbconfig.options));
 
 if(dbconfig.options.ssh){
+    console.log(JSON.stringify(dbconfig.options));
+    
     ca = [fs.readFileSync("../config/key.pem")];
     console.log(ca.toString());
     
