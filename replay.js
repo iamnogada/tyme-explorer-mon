@@ -23,15 +23,17 @@ WSReplay.init({})
 WSReplay.on(WSReplay.EVENT_ON_BLOCK,(block)=>{
     let no = util.parseBlockNoFromId(block.block_id)
     Blockinfo.save(block)
+    if(0 == no % 100){
+        console.log(`Saved until ${no}`);        
+    }
     if(no == count+start-1){
         let duration = new Date() - startTime;
         console.log(`Finished: ${duration/1000/60} minutes`);        
     }
 })
 
-// for(var i=start;i<count+start;i++){
-//     WSReplay.requestBlock(i)
-// }
-    WSReplay.requestBlock(3799939)
+for(var i=start;i<count+start;i++){
+    WSReplay.requestBlock(i)
+}
 
 
