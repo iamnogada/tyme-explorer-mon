@@ -8,6 +8,7 @@ var ca
 
 if(dbconfig.options.ssh){
     ca = [fs.readFileSync("../config/key.pem")];
+    dbconfig.options.sslCA=ca
 }
 class Database {
     constructor() {
