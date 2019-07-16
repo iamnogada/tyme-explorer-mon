@@ -8,10 +8,12 @@ const dbconfig = {
         ssl: true,
         sslValidate: true,
         sslCA: ca,
-        useNewUrlParser: true
+        useNewUrlParser: true,
+        replicaSet: "rs0",
+        readPreference: "secondaryPreferred"
     }
 }
-let uri = "mongodb://tyme:q1w2e3r4@tyme-mainnet.cluster-cvxrevdoop1u.ap-northeast-2.docdb.amazonaws.com:27017/tyme-mainnet?ssl=true&replicaSet=rs0&readPreference=secondaryPreferred"
+let uri = "mongodb://tyme:q1w2e3r4@tyme-mainnet.cluster-cvxrevdoop1u.ap-northeast-2.docdb.amazonaws.com:27017/tyme-mainnet"
 mongoose.connect(uri, dbconfig.options)
     .then(() => {
         console.log('connected');
