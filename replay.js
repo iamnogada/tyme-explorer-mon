@@ -25,7 +25,7 @@ WSReplay.on(WSReplay.EVENT_ON_BLOCK,(block)=>{
     Blockinfo.save(block)
     if(no == count+start-1){
         let duration = new Date() - startTime;
-        console.log(`Finished: ${duration/1000/60}`);        
+        console.log(`Finished: ${duration/1000/60} minutes`);        
     }
 })
 
