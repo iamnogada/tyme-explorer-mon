@@ -12,7 +12,7 @@ const dbconfig = {
     }
 }
 let uri = "mongodb://tyme:q1w2e3r4@tyme-mainnet.cluster-cvxrevdoop1u.ap-northeast-2.docdb.amazonaws.com:27017/tyme-mainnet?ssl=true&replicaSet=rs0&readPreference=secondaryPreferred"
-mongoose.connect(dbconfig, dbconfig.options)
+mongoose.connect(uri, dbconfig.options)
     .then(() => {
         console.log('connected');
 
