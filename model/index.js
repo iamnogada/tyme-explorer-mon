@@ -26,7 +26,7 @@ class Database {
             ServiceStatus.Database = true
             console.error(`Database connected`)
         })
-        mongoose.connect(`${server}/${collection}`)
+        mongoose.connect(`${server}/${collection}`,dbconfig.options)
             .then(() => {
                 ServiceStatus.Database = true
                 console.log('mongodb connected')
