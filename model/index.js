@@ -5,13 +5,9 @@ const collection = dbconfig.name
 const ServiceStatus = require('../service/Health')
 const fs = require('fs')
 var ca
-console.log(JSON.stringify(dbconfig.options));
 
-if(dbconfig.options.ssh){
-    console.log(JSON.stringify(dbconfig.options));
-    
+if(dbconfig.options.ssl){
     ca = [fs.readFileSync("../config/key.pem")];
-    console.log(ca.toString());
     
     dbconfig.options.sslCA=ca
 }
