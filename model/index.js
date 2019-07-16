@@ -3,7 +3,12 @@ const dbconfig = require('../config/dbconfig')
 const server = dbconfig.endpoint
 const collection = dbconfig.name
 const ServiceStatus = require('../service/Health')
+const fs = require('fs')
+var ca
 
+if(dbconfig.options.ssh){
+    ca = [fs.readFileSync("../config/key.pem")];
+}
 class Database {
     constructor() {
         this._connect()
