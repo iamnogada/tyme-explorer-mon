@@ -5,7 +5,7 @@ const blockSchema = new mongoose.Schema({
     summary: {
         transfer: Number,
         account_create: Number,
-        account_upadte: Number
+        account_update: Number
     },
     previous: String,
     timestamp : String,

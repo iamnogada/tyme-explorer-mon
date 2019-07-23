@@ -62,3 +62,5 @@ tmpe*
 # next.js build output
 .next
 temp
+
+.DS_Store
