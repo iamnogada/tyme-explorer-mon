@@ -2,6 +2,7 @@ const express = require('express')
 const WebSocket = require('ws')
 const path = require('path')
 const cookieParser = require('cookie-parser')
+const EventInvoke = require('./service/EventInvoke')
 const logger = require('morgan')
 
 const indexRouter = require('./routes/index')
@@ -44,8 +45,9 @@ app.createWSS=(server)=>{
 WSBlockinfo.init({})
 
 WSBlockinfo.on(WSBlockinfo.EVENT_ON_BLOCK,(block)=>{
-    console.log(`Getblock:${block.block_id}`)
     Blockinfo.save(block)
+    console.log(`Getblock:${block._id}`)
+    EventInvoke.invoke(block._id)
 })
 // Blockinfo.requestBlock(3847935)
 WSBlockMonitor.on(WSBlockMonitor.EVENT_ON_BLOCK,(data)=>{

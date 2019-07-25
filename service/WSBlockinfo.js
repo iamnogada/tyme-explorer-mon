@@ -4,6 +4,7 @@ const util = require('../lib/util')
 const apiconfig  = require('../config/apiconfig')
 const ServiceStatus = require('./Health')
 
+
 var self
 var _url = apiconfig.endpoint
 var _config = apiconfig.options
